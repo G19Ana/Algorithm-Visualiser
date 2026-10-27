@@ -1,0 +1,8 @@
+com\visualiser\dto\Step.class
+com\visualiser\service\PathfindingService.class
+com\visualiser\service\SortingService.class
+com\visualiser\VisualiserApplication.class
+com\visualiser\config\WsConfig.class
+com\visualiser\service\BstService.class
+com\visualiser\service\BstService$Node.class
+com\visualiser\ws\AlgoWsHandler.class

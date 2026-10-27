@@ -1,0 +1,163 @@
+<div class="dash">
+  <header class="header">
+    <h1>CS Algorithm Visualiser</h1>
+    <nav class="tabs">
+      <button [class.active]="tab() === 'path'" (click)="setTab('path')">Pathfinding</button>
+      <button [class.active]="tab() === 'sort'" (click)="setTab('sort')">Sorting</button>
+      <button [class.active]="tab() === 'bst'" (click)="setTab('bst')">BST Tree</button>
+      <button [class.active]="tab() === 'table'" (click)="setTab('table')">Complexity Table</button>
+    </nav>
+  </header>
+
+  <div class="controls-bar" *ngIf="tab() !== 'table'">
+    <div class="group" *ngIf="tab() === 'path'">
+      <select [(ngModel)]="pathAlgo">
+        <option value="dijkstra">Dijkstra</option>
+        <option value="astar">A* Search</option>
+        <option value="bfs">Breadth-First Search (BFS)</option>
+        <option value="dfs">Depth-First Search (DFS)</option>
+      </select>
+      <button class="btn" (click)="runPath()">Visualise</button>
+      <button class="btn-alt" (click)="clearWalls()">Clear Walls</button>
+      <button class="btn-alt" (click)="resetPathVisuals()">Reset Path</button>
+    </div>
+
+    <div class="group" *ngIf="tab() === 'sort'">
+      <select [(ngModel)]="sortAlgo">
+        <option value="quick">Quick Sort</option>
+        <option value="merge">Merge Sort</option>
+        <option value="heap">Heap Sort</option>
+        <option value="bubble">Bubble Sort</option>
+      </select>
+      <button class="btn" (click)="runSort()">Sort Array</button>
+      <button class="btn-alt" (click)="resetSortArray()">Shuffle</button>
+    </div>
+
+    <div class="group" *ngIf="tab() === 'bst'">
+      <input type="number" [(ngModel)]="bstVal" placeholder="Node value" style="width: 80px;" />
+      <button class="btn" (click)="insertBst()">Insert</button>
+      <select [(ngModel)]="bstTraverseOrder">
+        <option value="inorder">In-Order</option>
+        <option value="preorder">Pre-Order</option>
+        <option value="postorder">Post-Order</option>
+      </select>
+      <button class="btn-alt" (click)="traverseBst()">Traverse</button>
+      <button class="btn-alt" (click)="resetBst()">Reset</button>
+    </div>
+
+    <div class="group speed-group">
+      <label>Speed ({{ speed() }}ms)</label>
+      <input type="range" min="1" max="150" [ngModel]="speed()" (ngModelChange)="speed.set($event)" />
+      <button class="btn-step" (click)="pauseAnimation()">Pause</button>
+      <button class="btn-step" (click)="nextStep()">Step-by-Step</button>
+    </div>
+  </div>
+
+  <main class="viewport">
+    <div class="canvas-wrap" [style.display]="tab() === 'path' ? 'flex' : 'none'">
+      <p class="legend">Click and drag to draw walls. Green is Start, Red is End.</p>
+      <canvas #gridCanvas width="1050" height="500"
+              (mousedown)="onGridMouseDown($event)"
+              (mousemove)="onGridMouseMove($event)"
+              (mouseup)="onGridMouseUp()"></canvas>
+    </div>
+
+    <div class="canvas-wrap" [style.display]="tab() === 'sort' ? 'flex' : 'none'">
+      <canvas #sortCanvas width="1050" height="460"></canvas>
+    </div>
+
+    <div class="canvas-wrap" [style.display]="tab() === 'bst' ? 'flex' : 'none'">
+      <canvas #bstCanvas width="1050" height="460"></canvas>
+    </div>
+
+    <section class="box table-wrap" *ngIf="tab() === 'table'">
+      <h2>Algorithm Complexity Reference</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Algorithm</th>
+            <th>Type</th>
+            <th>Best Time</th>
+            <th>Average Time</th>
+            <th>Worst Time</th>
+            <th>Space Complexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dijkstra</strong></td>
+            <td>Pathfinding</td>
+            <td>O((V + E) log V)</td>
+            <td>O((V + E) log V)</td>
+            <td>O(V²)</td>
+            <td>O(V)</td>
+          </tr>
+          <tr>
+            <td><strong>A* Search</strong></td>
+            <td>Pathfinding</td>
+            <td>O(E)</td>
+            <td>O(E)</td>
+            <td>O(V²)</td>
+            <td>O(V)</td>
+          </tr>
+          <tr>
+            <td><strong>BFS</strong></td>
+            <td>Traversal</td>
+            <td>O(V + E)</td>
+            <td>O(V + E)</td>
+            <td>O(V + E)</td>
+            <td>O(V)</td>
+          </tr>
+          <tr>
+            <td><strong>DFS</strong></td>
+            <td>Traversal</td>
+            <td>O(V + E)</td>
+            <td>O(V + E)</td>
+            <td>O(V + E)</td>
+            <td>O(V)</td>
+          </tr>
+          <tr>
+            <td><strong>Quick Sort</strong></td>
+            <td>Sorting</td>
+            <td>O(N log N)</td>
+            <td>O(N log N)</td>
+            <td>O(N²)</td>
+            <td>O(log N)</td>
+          </tr>
+          <tr>
+            <td><strong>Merge Sort</strong></td>
+            <td>Sorting</td>
+            <td>O(N log N)</td>
+            <td>O(N log N)</td>
+            <td>O(N log N)</td>
+            <td>O(N)</td>
+          </tr>
+          <tr>
+            <td><strong>Heap Sort</strong></td>
+            <td>Sorting</td>
+            <td>O(N log N)</td>
+            <td>O(N log N)</td>
+            <td>O(N log N)</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td><strong>Bubble Sort</strong></td>
+            <td>Sorting</td>
+            <td>O(N)</td>
+            <td>O(N²)</td>
+            <td>O(N²)</td>
+            <td>O(1)</td>
+          </tr>
+          <tr>
+            <td><strong>BST (Search/Insert/Delete)</strong></td>
+            <td>Tree</td>
+            <td>O(log N)</td>
+            <td>O(log N)</td>
+            <td>O(N)</td>
+            <td>O(N)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
